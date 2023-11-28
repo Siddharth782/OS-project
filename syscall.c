@@ -165,7 +165,7 @@ void syscall(void)
   {
     curproc->tf->eax = syscalls[num]();
     // The following is added for Question 1.
-    cprintf("%s -> %d\n", syscallnames[num], curproc->tf->eax);
+    // cprintf("%s -> %d\n", syscallnames[num], curproc->tf->eax);
   }
   else
   {

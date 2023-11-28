@@ -86,6 +86,5 @@ int sys_uptime(void)
 
 int sys_getprocinfo(void)
 {
-
-  return 1975;
+  return procdata();
 }
