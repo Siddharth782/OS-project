@@ -1,4 +1,5 @@
 struct stat;
+struct uproc;
 struct rtcdate;
 
 // system calls
@@ -23,7 +24,7 @@ int getpid(void);
 char *sbrk(int);
 int sleep(int);
 int uptime(void);
-int getprocinfo(void);
+int getprocinfo(int pid, struct uproc *);
 
 // ulib.c
 int stat(const char *, struct stat *);

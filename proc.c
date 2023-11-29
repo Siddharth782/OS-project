@@ -6,6 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "stat.h"
 
 struct
 {
@@ -543,65 +544,88 @@ void procdump(void)
   }
 }
 
-int procdata(void)
+int procdata(int pid, struct uproc *up)
 {
-  cprintf("Inside proc.c\n");
+  // up->name = "Sidd";
+  // up->pid = 9875;
+  // up->ppid = 123;
+  // up->size = 1248;
+  // cprintf("Inside proc.c with pid %d and struct with name %s and pid %d\n", pid, up->name, up->pid);
   struct proc *p;
-  char *pstate = " ";
+  // char *pstate = " ";
 
   acquire(&ptable.lock);
   for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
   {
-    if (sizeof(p->name) > 0)
+    if (p->pid == pid)
+    {
       cprintf("The process name is %s\n", p->name);
-    cprintf("The process id is %d\n", p->pid);
-    cprintf("The parent process id is %d\n", p->parent->pid);
-    cprintf("The process size is %d bytes\n", p->sz);
-
-    switch (p->state)
-    {
-    case 0:
-      pstate = "UNUSED";
+      up->pid = p->pid;
+      up->ppid = p->parent->pid;
+      up->size = p->sz;
+      up->state = p->state;
+      up->killed = p->killed;
+      up->channel = (int)p->chan;
       break;
-    case 1:
-      pstate = "EMBRYO";
-      break;
-    case 2:
-      pstate = "SLEEPING";
-      break;
-    case 3:
-      pstate = "RUNNABLE";
-      break;
-    case 4:
-      pstate = "RUNNING";
-      break;
-    case 5:
-      pstate = "ZOMBIE";
-      break;
-    }
-    cprintf("The process state is %s\n", pstate);
-    if (p->killed)
-    {
-      cprintf("The process is killed\n");
     }
     else
     {
-      cprintf("The process is not killed\n");
+      up->pid = -10;
     }
+    // cprintf("The process id is %d\n", p->pid);
+    // cprintf("The parent process id is %d\n", p->parent->pid);
+    // cprintf("The process size is %d bytes\n", p->sz);
 
-    if ((int)p->chan == -1)
-    {
-      cprintf("The process is not waiting on a channel\n");
-    }
-    else
-    {
-      cprintf("The process is waiting on a channel\n");
-    }
+    // switch (p->state)
+    // {
+    // case 0:
+    //   pstate = "UNUSED";
+    //   break;
+    // case 1:
+    //   pstate = "EMBRYO";
+    //   break;
+    // case 2:
+    //   pstate = "SLEEPING";
+    //   break;
+    // case 3:
+    //   pstate = "RUNNABLE";
+    //   break;
+    // case 4:
+    //   pstate = "RUNNING";
+    //   break;
+    // case 5:
+    //   pstate = "ZOMBIE";
+    //   break;
+    // }
+    // cprintf("The process state is %s\n", pstate);
 
-    cprintf("\n");
+    // if (p->killed)
+    // {
+    //   cprintf("The process is killed\n");
+    // }
+    // else
+    // {
+    //   cprintf("The process is not killed\n");
+    // }
+
+    // if ((int)p->chan == -1)
+    // {
+    //   cprintf("The process is not waiting on a channel\n");
+    // }
+    // else
+    // {
+    //   cprintf("The process is waiting on a channel\n");
+    // }
+
+    // cprintf("\n");
   }
 
   release(&ptable.lock);
 
-  return 5;
+  if (up->pid == -10)
+  {
+    return -1;
+  }
+
+  return 0;
 }

@@ -4,6 +4,7 @@ struct file;
 struct inode;
 struct pipe;
 struct proc;
+struct uproc;
 struct rtcdate;
 struct spinlock;
 struct sleeplock;
@@ -113,7 +114,7 @@ struct proc *myproc();
 void pinit(void);
 void procdump(void);
 // procdata defined
-int procdata(void);
+int procdata(int, struct uproc *);
 void scheduler(void) __attribute__((noreturn));
 void sched(void);
 void setproc(struct proc *);
